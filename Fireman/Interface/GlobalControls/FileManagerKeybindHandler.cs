@@ -52,18 +52,22 @@ public class FileManagerKeybindHandler : MonoBehaviour {
     }
 
     private void GoForward() {
+        if (!gameObject.activeInHierarchy) return;
         TargetHost?.GoForward();
     }
 
     private void GoBack() {
+        if (!gameObject.activeInHierarchy) return;
         TargetHost?.GoBack();
     }
 
     private void GoUp() {
+        if (!gameObject.activeInHierarchy) return;
         TargetHost?.GoUp();
     }
 
     private void LeftTab() {
+        if (!gameObject.activeInHierarchy) return;
         if (TargetHost == null) return;
         var curr = TargetHost.CurrentTabIndex;
         var count = TargetHost.Count;
@@ -71,6 +75,7 @@ public class FileManagerKeybindHandler : MonoBehaviour {
     }
 
     private void RightTab() {
+        if (!gameObject.activeInHierarchy) return;
         if (TargetHost == null) return;
         var curr = TargetHost.CurrentTabIndex;
         TargetHost.CurrentTabIndex = (curr + 1) % TargetHost.Count;

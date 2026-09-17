@@ -82,7 +82,6 @@ public class FileManager : MonoBehaviour {
         var keybindsComp = gameObject.GetOrAddComponent<FileManagerKeybindHandler>();
         keybindsComp.TargetHost = Host;
         Host.TabsChanged += CloseIfEmpty;
-
     }
 
     private void OnDestroy() {
