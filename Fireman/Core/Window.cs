@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Fireman.Core.User;
+using Fireman.Core;
 using Fireman.Interface;
 
 namespace Fireman.Core;

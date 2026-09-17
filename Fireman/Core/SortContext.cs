@@ -1,6 +1,6 @@
 ﻿using Fireman.Interface;
 
-namespace Fireman.Core.User;
+namespace Fireman.Core;
 
 /// <summary>
 /// Context for sorting

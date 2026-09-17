@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Fireman.Core.User;
+namespace Fireman.Core;
 
 /// <summary>
 /// Sorting strategy for file system items

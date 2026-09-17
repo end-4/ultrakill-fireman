@@ -1,7 +1,6 @@
 using System;
 using System.IO;
-using Fireman.Core.User;
-using Fireman.Core.User.SortStrategies;
+using Fireman.Core.SortStrategies;
 
 namespace Fireman.Core;
 

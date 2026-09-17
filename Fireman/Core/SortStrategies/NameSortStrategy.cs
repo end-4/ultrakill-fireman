@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Fireman.Core.User.SortStrategies;
+namespace Fireman.Core.SortStrategies;
 
 /// <summary>
 /// Strategy that sorts by file name alphabetically
