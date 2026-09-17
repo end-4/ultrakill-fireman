@@ -8,13 +8,14 @@ namespace Fireman.Interface.Views;
 /// Populator for grid view
 /// </summary>
 public class GridViewPopulator : ViewPopulator {
-    protected override GameObject CreateItem(FileSystemInfo fileInfo) {
+    protected override GameObject CreateItem(FileSystemInfo fileInfo, int index) {
         var prefab = AssetManager.Get<GameObject>(Plugin.BundleKey, "GridFileItem");
         var obj = Instantiate(prefab);
         if (obj == null) return null!;
         var comp = obj.AddComponent<GridItemController>();
         comp.FileInfo = fileInfo;
         comp.TargetWindow = TargetWindow;
+        comp.Index = index;
         return obj;
     }
 }

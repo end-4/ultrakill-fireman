@@ -12,28 +12,17 @@ namespace Fireman.Interface.Views;
 /// <summary>
 /// Controller for a grid item (file/folder)
 /// </summary>
-public class GridItemController : MonoBehaviour {
-    /// <summary>
-    /// The info of the item
-    /// </summary>
-    public FileSystemInfo? FileInfo;
-
-    /// <summary>
-    /// The window this item belongs to
-    /// </summary>
-    public Window? TargetWindow;
+public class GridItemController : FileItemController {
 
     private Image? _icon;
     private TextMeshProUGUI? _name;
     private Button? _btn;
-    private ClickHandler? _clickHandler;
 
-    private void Start() {
+    protected override void Start() {
+        base.Start();
         _btn = GetComponent<Button>();
         _icon = gameObject.FindRecursive("Icon")?.GetComponent<Image>();
         _name = gameObject.FindRecursive("Name")?.GetComponent<TextMeshProUGUI>();
-        _clickHandler = gameObject.GetOrAddComponent<ClickHandler>();
-        _clickHandler.OnDoubleClick += ActivateItem;
         UpdateItemInfo();
     }
 

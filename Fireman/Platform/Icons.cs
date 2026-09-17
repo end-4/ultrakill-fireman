@@ -28,7 +28,7 @@ public static class Icons {
     };
 
     private static readonly Dictionary<string[], string> FileExtMap = new() {
-        { [".txt", ".docx", ".doc", ".pdf", ".rtf", ".odt", ".tex"], "file_text" },
+        { [".txt", ".docx", ".doc", ".pdf", ".rtf", ".odt", ".tex", ".log"], "file_text" },
         { [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp", ".tiff", ".tif", ".ico",
             ".heic", ".psd", ".jxl"], "file_image" },
         { [".mp3", ".wav", ".aac", ".flac", ".ogg", ".m4a"], "file_music" },

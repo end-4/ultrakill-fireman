@@ -184,4 +184,26 @@ public class Window {
     public void CloseTab() {
         CloseTab(CurrentTab);
     }
+
+    /// <summary>
+    /// Activates current selection
+    /// </summary>
+    public void ActivateSelection() {
+        var selection = CurrentTab.Selection;
+        var count = selection.Count;
+        if (count == 1) {
+            // Single selection -> folder opened in current tab
+            var path = selection.SelectedPaths.First();
+            if (Directory.Exists(path)) {
+                CurrentPath = path;
+            }
+        } else {
+            // Multi selection -> folders opened in their own tabs
+            foreach (var path in selection.SelectedPaths) {
+                if (Directory.Exists(path)) {
+                    NewTab(path);
+                }
+            }
+        }
+    }
 }
