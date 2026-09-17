@@ -11,24 +11,24 @@ namespace Fireman.Interface.GlobalControls;
 /// Controller for the status bar
 /// </summary>
 public class StatusBarController : MonoBehaviour {
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private TextMeshProUGUI? _text;
 
     private void Start() {
         _text = gameObject.FindRecursive("Text")?.GetComponent<TextMeshProUGUI>();
 
-        if (TargetHost != null) TargetHost.CurrentPathChanged += UpdateDisplay;
+        if (TargetWindow != null) TargetWindow.CurrentPathChanged += UpdateDisplay;
         UpdateDisplay();
     }
 
     private void OnDestroy() {
-        if (TargetHost != null) TargetHost.CurrentPathChanged -= UpdateDisplay;
+        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= UpdateDisplay;
     }
 
     private void UpdateDisplay() {
-        if (TargetHost == null) return;
-        var items = TargetHost.GetCurrentDirItemsUnsorted();
+        if (TargetWindow == null) return;
+        var items = TargetWindow.GetCurrentDirItemsUnsorted();
         int folders = items.Count(i => i is DirectoryInfo);
         int files = items.Count(i => i is FileInfo);
         var statusText = "";

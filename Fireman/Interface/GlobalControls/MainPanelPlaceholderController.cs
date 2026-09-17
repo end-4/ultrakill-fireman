@@ -9,20 +9,20 @@ namespace Fireman.Interface.GlobalControls;
 /// Controller for the main panel's placeholder
 /// </summary>
 public class MainPanelPlaceholderController : MonoBehaviour {
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private GameObject? _empty;
 
     private void Start() {
-        if (TargetHost == null) return;
+        if (TargetWindow == null) return;
         _empty = gameObject.FindRecursive("Empty");
-        TargetHost.CurrentPathChanged += UpdatePlaceholder;
+        TargetWindow.CurrentPathChanged += UpdatePlaceholder;
         UpdatePlaceholder();
     }
 
     private void UpdatePlaceholder() {
-        if (TargetHost == null) return;
-        var itemCount = TargetHost.GetCurrentDirItemsUnsorted().Length;
+        if (TargetWindow == null) return;
+        var itemCount = TargetWindow.GetCurrentDirItemsUnsorted().Length;
         _empty?.SetActiveAnimated(itemCount == 0, new Vector2(0, -10f), 30f);
     }
 }

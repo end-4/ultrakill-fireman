@@ -9,9 +9,9 @@ namespace Fireman.Interface.GlobalControls;
 /// </summary>
 public class FileManagerKeybindHandler : MonoBehaviour {
     /// <summary>
-    /// The tab host to control
+    /// The window to control
     /// </summary>
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private void OnEnable() {
         Config.NewTabBind.OnPress += NewTab;
@@ -43,41 +43,41 @@ public class FileManagerKeybindHandler : MonoBehaviour {
 
     private void NewTab() {
         if (!gameObject.activeInHierarchy) return;
-        TargetHost?.NewTab();
+        TargetWindow?.NewTab();
     }
 
     private void CloseTab() {
         if (!gameObject.activeInHierarchy) return;
-        TargetHost?.CloseTab();
+        TargetWindow?.CloseTab();
     }
 
     private void GoForward() {
         if (!gameObject.activeInHierarchy) return;
-        TargetHost?.GoForward();
+        TargetWindow?.GoForward();
     }
 
     private void GoBack() {
         if (!gameObject.activeInHierarchy) return;
-        TargetHost?.GoBack();
+        TargetWindow?.GoBack();
     }
 
     private void GoUp() {
         if (!gameObject.activeInHierarchy) return;
-        TargetHost?.GoUp();
+        TargetWindow?.GoUp();
     }
 
     private void LeftTab() {
         if (!gameObject.activeInHierarchy) return;
-        if (TargetHost == null) return;
-        var curr = TargetHost.CurrentTabIndex;
-        var count = TargetHost.Count;
-        TargetHost.CurrentTabIndex = (curr + count - 1) % count;
+        if (TargetWindow == null) return;
+        var curr = TargetWindow.CurrentTabIndex;
+        var count = TargetWindow.Count;
+        TargetWindow.CurrentTabIndex = (curr + count - 1) % count;
     }
 
     private void RightTab() {
         if (!gameObject.activeInHierarchy) return;
-        if (TargetHost == null) return;
-        var curr = TargetHost.CurrentTabIndex;
-        TargetHost.CurrentTabIndex = (curr + 1) % TargetHost.Count;
+        if (TargetWindow == null) return;
+        var curr = TargetWindow.CurrentTabIndex;
+        TargetWindow.CurrentTabIndex = (curr + 1) % TargetWindow.Count;
     }
 }

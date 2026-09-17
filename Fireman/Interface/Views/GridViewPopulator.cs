@@ -14,7 +14,7 @@ public class GridViewPopulator : ViewPopulator {
         if (obj == null) return null!;
         var comp = obj.AddComponent<GridItemController>();
         comp.FileInfo = fileInfo;
-        comp.TargetHost = TargetHost;
+        comp.TargetWindow = TargetWindow;
         return obj;
     }
 }

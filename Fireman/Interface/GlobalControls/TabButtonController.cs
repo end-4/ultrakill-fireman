@@ -16,7 +16,7 @@ namespace Fireman.Interface.GlobalControls;
 /// </summary>
 public class TabButtonController : MonoBehaviour {
     public Tab? TargetTab;
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private Button? _btn;
     private Image? _icon;
@@ -35,23 +35,23 @@ public class TabButtonController : MonoBehaviour {
 
         // Hooks
         _btn?.onClick.AddListener(() => {
-            if (TargetHost != null && TargetTab != null) TargetHost.CurrentTab = TargetTab;
+            if (TargetWindow != null && TargetTab != null) TargetWindow.CurrentTab = TargetTab;
         });
         _close?.onClick.AddListener(() => {
-            if (TargetHost != null && TargetTab != null) TargetHost.CloseTab(TargetTab);
+            if (TargetWindow != null && TargetTab != null) TargetWindow.CloseTab(TargetTab);
         });
         gameObject.GetOrAddComponent<ClickHandler>().OnMiddlePress += () => {
-            if (TargetHost != null && TargetTab != null) TargetHost.CloseTab(TargetTab);
+            if (TargetWindow != null && TargetTab != null) TargetWindow.CloseTab(TargetTab);
         };
         if (TargetTab != null) TargetTab.CurrentPathChanged += UpdateCurrentDir;
-        if (TargetHost != null) TargetHost.CurrentTabChanged += UpdateActive;
+        if (TargetWindow != null) TargetWindow.CurrentTabChanged += UpdateActive;
         UpdateCurrentDir();
         UpdateActive();
     }
 
     private void OnDestroy() {
         if (TargetTab != null) TargetTab.CurrentPathChanged -= UpdateCurrentDir;
-        if (TargetHost != null) TargetHost.CurrentTabChanged -= UpdateActive;
+        if (TargetWindow != null) TargetWindow.CurrentTabChanged -= UpdateActive;
     }
 
     private void UpdateCurrentDir() {
@@ -68,7 +68,7 @@ public class TabButtonController : MonoBehaviour {
 
     private void UpdateActive() {
         if (_btnVisualState == null) return;
-        _btnVisualState.Active = TargetHost?.CurrentTab == TargetTab;
+        _btnVisualState.Active = TargetWindow?.CurrentTab == TargetTab;
         gameObject.UnfuckLayoutHack();
     }
 }

@@ -15,7 +15,7 @@ namespace Fireman.Interface;
 public class FileManager : MonoBehaviour {
     private static readonly string DefaultPath = Platform.Paths.GameInfo.FullName;
 
-    private TabHost Host;
+    private Window Host;
     public IReadOnlyList<Tab> Tabs => Host.Tabs;
     public Tab CurrentTab => Host.CurrentTab;
 
@@ -25,7 +25,7 @@ public class FileManager : MonoBehaviour {
     }
 
     private void Start() {
-        Host = new TabHost(DefaultPath);
+        Host = new Window(DefaultPath);
 
         // Controller adding //
 
@@ -36,51 +36,51 @@ public class FileManager : MonoBehaviour {
         close?.GetComponent<Button>().onClick.AddListener(Close);
         var tabRow = gameObject.FindRecursive("Titlebar/TabScrollView/Viewport/Row");
         var tabsComp = tabRow?.AddComponent<TabRowController>();
-        if (tabsComp != null) tabsComp.TargetHost = Host;
+        if (tabsComp != null) tabsComp.TargetWindow = Host;
 
         // Top bar stuff
         var topBar = gameObject.FindRecursive("Content/TopBar");
         var back = topBar?.FindRecursive("Navi/Back");
         var backComp = back?.AddComponent<BackButtonController>();
-        if (backComp != null) backComp.TargetHost = Host;
+        if (backComp != null) backComp.TargetWindow = Host;
         var fwd = topBar?.FindRecursive("Navi/Forward");
         var fwdComp = fwd?.AddComponent<ForwardButtonController>();
-        if (fwdComp != null) fwdComp.TargetHost = Host;
+        if (fwdComp != null) fwdComp.TargetWindow = Host;
         var up = topBar?.FindRecursive("Navi/Up");
         var upComp = up?.AddComponent<UpButtonController>();
-        if (upComp != null) upComp.TargetHost = Host;
+        if (upComp != null) upComp.TargetWindow = Host;
         var input = topBar?.FindRecursive("Address/Input");
         var inputComp = input?.AddComponent<AddressInputController>();
-        if (inputComp != null) inputComp.TargetHost = Host;
+        if (inputComp != null) inputComp.TargetWindow = Host;
         var settings = topBar?.FindRecursive("Settings")?.GetComponent<Button>();
         settings?.gameObject.SetActive(false); // TODO allow open thorn clickgui menu and impl this btn
 
         // Bookmarks
         var bookmarks = gameObject?.FindRecursive("Content/Body/Bookmarks/Container/ScrollView/Viewport/Content");
         var bookmarksComp = bookmarks?.AddComponent<BookmarksController>();
-        if (bookmarksComp != null) bookmarksComp.TargetHost = Host;
+        if (bookmarksComp != null) bookmarksComp.TargetWindow = Host;
 
         // Main file pane
         var mainContainer = gameObject?.FindRecursive("Content/Body/Files/Container");
         var views = mainContainer?.FindRecursive("ScrollView/Viewport/Content");
         var grid = views?.FindRecursive("GridView");
         var gridComp = grid?.AddComponent<GridViewPopulator>();
-        if (gridComp != null) gridComp.TargetHost = Host;
+        if (gridComp != null) gridComp.TargetWindow = Host;
         // TODO list view
         var placeholder = mainContainer?.FindRecursive("Placeholders");
         var placeholderComp = placeholder?.AddComponent<MainPanelPlaceholderController>();
-        if (placeholderComp != null) placeholderComp.TargetHost = Host;
+        if (placeholderComp != null) placeholderComp.TargetWindow = Host;
 
         // Status & actions
         var status = mainContainer?.FindRecursive("Status");
         var statComp = status?.AddComponent<StatusBarController>();
-        if (statComp != null) statComp.TargetHost = Host;
+        if (statComp != null) statComp.TargetWindow = Host;
         var actions = mainContainer?.FindRecursive("Actions");
         var actionsComp = actions?.AddComponent<ActionsBarController>();
 
         // Hooks
         var keybindsComp = gameObject.GetOrAddComponent<FileManagerKeybindHandler>();
-        keybindsComp.TargetHost = Host;
+        keybindsComp.TargetWindow = Host;
         Host.TabsChanged += CloseIfEmpty;
     }
 

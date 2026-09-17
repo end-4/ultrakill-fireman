@@ -20,14 +20,14 @@ public class BookmarkItemController : MonoBehaviour {
     public DirectoryInfo? Path;
 
     /// <summary>
-    /// The target tab host
+    /// The target window
     /// </summary>
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private ButtonActiveStateIndicator? _btnVisualState;
 
     private void Start() {
-        if (Path == null || TargetHost == null) return;
+        if (Path == null || TargetWindow == null) return;
         var ico = gameObject.FindRecursive("Icon")?.GetComponent<Image>();
         var text = gameObject.FindRecursive("Name")?.GetComponent<TextMeshProUGUI>();
         _btnVisualState = gameObject.GetOrAddComponent<ButtonActiveStateIndicator>();
@@ -35,13 +35,13 @@ public class BookmarkItemController : MonoBehaviour {
         if (ico != null) ico.sprite = icoSprite;
         if (text != null) text.text = GetBookmarkName(Path);
 
-        gameObject.GetOrAddComponent<ClickHandler>().OnPress += () => TargetHost.CurrentPath = Path.FullName;
-        TargetHost.CurrentPathChanged += UpdateDisplay;
+        gameObject.GetOrAddComponent<ClickHandler>().OnPress += () => TargetWindow.CurrentPath = Path.FullName;
+        TargetWindow.CurrentPathChanged += UpdateDisplay;
         UpdateDisplay();
     }
 
     private void OnDisable() {
-        if (TargetHost != null) TargetHost.CurrentPathChanged -= UpdateDisplay;
+        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= UpdateDisplay;
     }
 
     private string GetBookmarkName(DirectoryInfo path) {
@@ -49,7 +49,7 @@ public class BookmarkItemController : MonoBehaviour {
     }
 
     private void UpdateDisplay() {
-        if (_btnVisualState == null || TargetHost == null || Path == null) return;
-        _btnVisualState.Active = TargetHost.CurrentTab.CurrentPath == Path.FullName;
+        if (_btnVisualState == null || TargetWindow == null || Path == null) return;
+        _btnVisualState.Active = TargetWindow.CurrentTab.CurrentPath == Path.FullName;
     }
 }

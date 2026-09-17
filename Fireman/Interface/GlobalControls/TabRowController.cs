@@ -17,27 +17,27 @@ public class TabRowController : MonoBehaviour {
     /// <summary>
     /// The TabHost this controller gets tabs from
     /// </summary>
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private GameObject? _newButton;
 
     private void Start() {
-        // if (TargetHost != null) TargetHost.TabsChanged += Repopulate;
-        if (TargetHost != null) {
-            TargetHost.TabAdded += AddTab;
-            TargetHost.TabRemoved += RemoveTab;
-            TargetHost.CurrentPathChanged += gameObject.UnfuckLayoutHack;
+        // if (TargetWindow != null) TargetWindow.TabsChanged += Repopulate;
+        if (TargetWindow != null) {
+            TargetWindow.TabAdded += AddTab;
+            TargetWindow.TabRemoved += RemoveTab;
+            TargetWindow.CurrentPathChanged += gameObject.UnfuckLayoutHack;
         }
 
         Repopulate();
     }
 
     private void OnDestroy() {
-        // if (TargetHost != null) TargetHost.TabsChanged -= Repopulate;
-        if (TargetHost != null) {
-            TargetHost.TabAdded -= AddTab;
-            TargetHost.TabRemoved -= RemoveTab;
-            TargetHost.CurrentPathChanged -= gameObject.UnfuckLayoutHack;
+        // if (TargetWindow != null) TargetWindow.TabsChanged -= Repopulate;
+        if (TargetWindow != null) {
+            TargetWindow.TabAdded -= AddTab;
+            TargetWindow.TabRemoved -= RemoveTab;
+            TargetWindow.CurrentPathChanged -= gameObject.UnfuckLayoutHack;
         }
     }
 
@@ -47,7 +47,7 @@ public class TabRowController : MonoBehaviour {
         if (obj == null) return;
         var comp = obj.AddComponent<TabButtonController>();
         comp.TargetTab = tab;
-        comp.TargetHost = TargetHost;
+        comp.TargetWindow = TargetWindow;
         _newButton?.transform.SetAsLastSibling();
     }
 
@@ -59,9 +59,9 @@ public class TabRowController : MonoBehaviour {
     }
 
     private void Repopulate() {
-        if (TargetHost == null) return;
+        if (TargetWindow == null) return;
         foreach (Transform childTrans in transform) Destroy(childTrans.gameObject);
-        foreach (Tab tab in TargetHost.Tabs) AddTab(tab);
+        foreach (Tab tab in TargetWindow.Tabs) AddTab(tab);
         EnsureNewButton();
         gameObject.UnfuckLayoutHack();
         ExecutionUtils.RunNextFrame(() => {
@@ -79,6 +79,6 @@ public class TabRowController : MonoBehaviour {
     }
 
     private void AddTab() {
-        TargetHost?.NewTab();
+        TargetWindow?.NewTab();
     }
 }

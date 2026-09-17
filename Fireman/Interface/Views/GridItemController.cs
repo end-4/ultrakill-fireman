@@ -19,9 +19,9 @@ public class GridItemController : MonoBehaviour {
     public FileSystemInfo? FileInfo;
 
     /// <summary>
-    /// The tab host this item belongs to
+    /// The window this item belongs to
     /// </summary>
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private Image? _icon;
     private TextMeshProUGUI? _name;
@@ -39,8 +39,8 @@ public class GridItemController : MonoBehaviour {
 
     private void ActivateItem() {
         if (FileInfo is DirectoryInfo dir) {
-            if (TargetHost == null) return;
-            TargetHost.CurrentPath = dir.FullName;
+            if (TargetWindow == null) return;
+            TargetWindow.CurrentPath = dir.FullName;
         }
     }
 

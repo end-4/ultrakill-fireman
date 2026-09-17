@@ -12,7 +12,7 @@ namespace Fireman.Interface.GlobalControls;
 /// Controller for the bookmarks pane column
 /// </summary>
 public class BookmarksController : MonoBehaviour {
-    public TabHost? TargetHost;
+    public Window? TargetWindow;
 
     private const string Separator = "__SEPARATOR";
     private static readonly string[] ItemPaths = [
@@ -47,6 +47,6 @@ public class BookmarksController : MonoBehaviour {
         if (item == null) return;
         var comp = item.AddComponent<BookmarkItemController>();
         comp.Path = new DirectoryInfo(path);
-        comp.TargetHost = TargetHost;
+        comp.TargetWindow = TargetWindow;
     }
 }

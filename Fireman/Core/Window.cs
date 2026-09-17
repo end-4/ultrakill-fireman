@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Fireman.Core.User;
+using Fireman.Interface;
 
 namespace Fireman.Core;
 
-public class TabHost {
+/// <summary>
+/// Backing data/logic of a window
+/// For the GUI, see <see cref="FileManager"/> and related components that it uses
+/// </summary>
+public class Window {
     private List<Tab> _tabs;
     private int _currTabIndex;
 
@@ -109,10 +114,10 @@ public class TabHost {
     }
 
     /// <summary>
-    /// Constructor for a tab host
+    /// Constructor for a window
     /// </summary>
     /// <param name="initialPath">The starting path</param>
-    public TabHost(string initialPath) {
+    public Window(string initialPath) {
         var firstTab = new Tab(initialPath);
         _tabs = [firstTab];
         CurrentTabChanged += () => CurrentPathChanged?.Invoke();
@@ -124,7 +129,7 @@ public class TabHost {
     /// Clone an existing TabHost
     /// </summary>
     /// <param name="source">The source TabHost</param>
-    public TabHost(TabHost source) {
+    public Window(Window source) {
         _tabs = source._tabs.Select(tab => new Tab(tab)).ToList();
         CurrentTabChanged += () => CurrentPathChanged?.Invoke();
         foreach (var tab in _tabs) TabAdded?.Invoke(tab);
