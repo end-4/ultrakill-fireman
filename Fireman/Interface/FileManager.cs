@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Fireman.Core;
 using Fireman.Interface.GlobalControls;
+using Fireman.Interface.Reusables;
 using Fireman.Interface.Views;
 using NukeLib.UI;
 using ThornClient.Managers;
@@ -29,7 +30,7 @@ public class FileManager : MonoBehaviour {
 
         // Controller adding //
 
-        // Titlebar stuff
+        // Titlebar & window
         var titlebar = gameObject.FindRecursive("Titlebar");
         titlebar?.AddComponent<TitlebarDragHandler>();
         var close = gameObject.FindRecursive("Titlebar/Close");
@@ -37,6 +38,9 @@ public class FileManager : MonoBehaviour {
         var tabRow = gameObject.FindRecursive("Titlebar/TabScrollView/Viewport/Row");
         var tabsComp = tabRow?.AddComponent<TabRowController>();
         if (tabsComp != null) tabsComp.TargetWindow = Host;
+        var resizeComp = gameObject.AddComponent<ResizeController>();
+        resizeComp.minWidth = 300;
+        resizeComp.minHeight = 200;
 
         // Top bar stuff
         var topBar = gameObject.FindRecursive("Content/TopBar");

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Fireman.Core;
+using NukeLib.Utils;
 using UnityEngine;
 
 namespace Fireman.Interface.GlobalControls;
@@ -25,6 +27,14 @@ public class FileManagerKeybindHandler : MonoBehaviour {
         Config.LeftTabBindAlt.OnPress += LeftTab;
         Config.RightTabBind.OnPress += RightTab;
         Config.RightTabBindAlt.OnPress += RightTab;
+        Config.CopyBind.OnPress += Copy;
+        Config.CopyBindAlt.OnPress += Copy;
+        Config.CutBind.OnPress += Cut;
+        Config.CutBindAlt.OnPress += Cut;
+        Config.PasteBind.OnPress += Paste;
+        Config.PasteBindAlt.OnPress += Paste;
+        Config.PermaDeleteBind.OnPress += PermaDelete;
+        Config.PermaDeleteBindAlt.OnPress += PermaDelete;
     }
 
     private void OnDisable() {
@@ -39,6 +49,14 @@ public class FileManagerKeybindHandler : MonoBehaviour {
         Config.LeftTabBindAlt.OnPress -= LeftTab;
         Config.RightTabBind.OnPress -= RightTab;
         Config.RightTabBindAlt.OnPress -= RightTab;
+        Config.CopyBind.OnPress -= Copy;
+        Config.CopyBindAlt.OnPress -= Copy;
+        Config.CutBind.OnPress -= Cut;
+        Config.CutBindAlt.OnPress -= Cut;
+        Config.PasteBind.OnPress -= Paste;
+        Config.PasteBindAlt.OnPress -= Paste;
+        Config.PermaDeleteBind.OnPress -= PermaDelete;
+        Config.PermaDeleteBindAlt.OnPress -= PermaDelete;
     }
 
     private void NewTab() {
@@ -67,17 +85,38 @@ public class FileManagerKeybindHandler : MonoBehaviour {
     }
 
     private void LeftTab() {
-        if (!gameObject.activeInHierarchy) return;
-        if (TargetWindow == null) return;
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
         var curr = TargetWindow.CurrentTabIndex;
         var count = TargetWindow.Count;
         TargetWindow.CurrentTabIndex = (curr + count - 1) % count;
     }
 
     private void RightTab() {
-        if (!gameObject.activeInHierarchy) return;
-        if (TargetWindow == null) return;
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
         var curr = TargetWindow.CurrentTabIndex;
         TargetWindow.CurrentTabIndex = (curr + 1) % TargetWindow.Count;
+    }
+
+    private void Copy() {
+        // Plugin.Log.LogInfo($"Copy:  {TargetWindow?.CurrentTab.Selection.SelectedPaths.ToArray().Stringify()}");
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
+        FileOperationsManager.Copy(TargetWindow.CurrentTab.Selection);
+    }
+
+    private void Cut() {
+        // Plugin.Log.LogInfo($"Cut:   {TargetWindow?.CurrentTab.Selection.SelectedPaths.ToArray().Stringify()}");
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
+        FileOperationsManager.Cut(TargetWindow.CurrentTab.Selection);
+    }
+
+    private void Paste() {
+        // Plugin.Log.LogInfo($"Paste: {TargetWindow?.CurrentPath}");
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
+        FileOperationsManager.Paste(TargetWindow.CurrentPath);
+    }
+
+    private void PermaDelete() {
+        if (!gameObject.activeInHierarchy || TargetWindow == null) return;
+        FileOperationsManager.PermaDelete(TargetWindow.CurrentTab.Selection);
     }
 }

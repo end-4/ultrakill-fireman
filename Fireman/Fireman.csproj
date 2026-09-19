@@ -47,11 +47,20 @@
       <Reference Include="UnityEngine.CoreModule">
         <HintPath>..\libs\UnityEngine.CoreModule.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.IMGUIModule">
+        <HintPath>..\libs\UnityEngine.IMGUIModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.InputLegacyModule">
         <HintPath>..\libs\UnityEngine.InputLegacyModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.InputModule">
         <HintPath>..\libs\UnityEngine.InputModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextCoreFontEngineModule">
+        <HintPath>..\libs\UnityEngine.TextCoreFontEngineModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.TextRenderingModule">
+        <HintPath>..\libs\UnityEngine.TextRenderingModule.dll</HintPath>
       </Reference>
       <Reference Include="UnityEngine.UI">
         <HintPath>..\libs\UnityEngine.UI.dll</HintPath>

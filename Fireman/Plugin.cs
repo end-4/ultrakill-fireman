@@ -2,8 +2,8 @@ using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
+using Fireman.Core;
 using ThornClient.Managers;
-using UnityEngine;
 
 namespace Fireman;
 

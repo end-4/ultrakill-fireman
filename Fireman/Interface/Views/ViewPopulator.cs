@@ -13,14 +13,64 @@ namespace Fireman.Interface.Views;
 public abstract class ViewPopulator : MonoBehaviour {
     public Window? TargetWindow;
 
+    private FileSystemWatcher? _watcher;
+    private volatile bool _refreshRequested;
+
     protected virtual void Start() {
         if (TargetWindow == null) return;
-        TargetWindow.CurrentPathChanged += Repopulate;
+        TargetWindow.CurrentPathChanged += OnPathChanged;
+
+        SetupWatcher();
         Repopulate();
     }
 
     protected virtual void OnDestroy() {
-        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= Repopulate;
+        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= OnPathChanged;
+        DisposeWatcher();
+    }
+
+    private void OnPathChanged() {
+        SetupWatcher();
+        Repopulate();
+    }
+
+    private void SetupWatcher() {
+        DisposeWatcher();
+
+        if (TargetWindow?.CurrentPath == null || !Directory.Exists(TargetWindow.CurrentPath)) return;
+
+        try {
+            _watcher = new FileSystemWatcher(TargetWindow.CurrentPath) {
+                NotifyFilter = NotifyFilters.FileName
+                             | NotifyFilters.DirectoryName
+                             | NotifyFilters.LastWrite
+                             | NotifyFilters.Size,
+                Filter = "*.*",
+                EnableRaisingEvents = true
+            };
+
+            _watcher.Created += OnFileSystemChanged;
+            _watcher.Deleted += OnFileSystemChanged;
+            _watcher.Renamed += OnFileSystemChanged;
+            _watcher.Changed += OnFileSystemChanged;
+        } catch (System.Exception ex) {
+            Debug.LogWarning($"Failed to initialize FileSystemWatcher for {TargetWindow.CurrentPath}: {ex.Message}");
+        }
+    }
+
+    private void OnFileSystemChanged(object sender, FileSystemEventArgs e) {
+        _refreshRequested = true;
+    }
+
+    private void DisposeWatcher() {
+        if (_watcher == null) return;
+        _watcher.EnableRaisingEvents = false;
+        _watcher.Created -= OnFileSystemChanged;
+        _watcher.Deleted -= OnFileSystemChanged;
+        _watcher.Renamed -= OnFileSystemChanged;
+        _watcher.Changed -= OnFileSystemChanged;
+        _watcher.Dispose();
+        _watcher = null;
     }
 
     /// <summary>
@@ -44,6 +94,11 @@ public abstract class ViewPopulator : MonoBehaviour {
     protected abstract GameObject CreateItem(FileSystemInfo fileInfo, int index);
 
     protected virtual void Update() {
+        if (_refreshRequested) {
+            _refreshRequested = false;
+            Repopulate();
+        }
+
         if (TargetWindow == null) return;
 
         // Don't steal arrow presses if typing

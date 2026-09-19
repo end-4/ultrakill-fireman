@@ -42,22 +42,27 @@ public class NavigationHistory {
     }
 
     /// <summary>
-    /// Go directly to a new directory
+    /// Go to a new directory
     /// </summary>
-    public void NavigateTo(string newPath) {
-        if (string.IsNullOrEmpty(newPath)) return;
+    /// <returns>Whether the navigation was successful</returns>
+    public bool NavigateTo(string newPath) {
+        if (string.IsNullOrEmpty(newPath)) return false;
+        var resolvedPath = Validations.ResolvePath(newPath);
 
         // Don't push to history if navigating to the exact path we are already on
-        if (CurrentPath.Equals(newPath, StringComparison.OrdinalIgnoreCase))
-            return;
+        if (CurrentPath.Equals(resolvedPath, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        if (!Validations.Accessible(resolvedPath)) return false;
 
         // Truncate any forward history
         if (_currentIndex < _dirList.Count - 1) {
             _dirList.RemoveRange(_currentIndex + 1, _dirList.Count - (_currentIndex + 1));
         }
 
-        _dirList.Add(newPath);
+        _dirList.Add(resolvedPath);
         _currentIndex++;
+        return true;
     }
 
     /// <summary>

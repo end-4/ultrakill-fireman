@@ -20,8 +20,10 @@ public class AddressInputController : MonoBehaviour {
     }
 
     private void TrySetPath(string value) {
-        if (Directory.Exists(value) && TargetWindow != null) {
+        if (Validations.Accessible(value) && TargetWindow != null) {
             TargetWindow.CurrentPath = value;
+        } else {
+            UpdateDisplay();
         }
     }
 

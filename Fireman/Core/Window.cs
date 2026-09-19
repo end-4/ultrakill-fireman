@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Fireman.Core;
 using Fireman.Interface;
+using Fireman.Platform;
 
 namespace Fireman.Core;
 
@@ -76,8 +77,9 @@ public class Window {
 
     /// <summary>
     /// Gets items in the current directory, unsorted
+    /// Returns an empty array if access is denied
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Array of file system items, or empty array if access denied</returns>
     public FileSystemInfo[] GetCurrentDirItemsUnsorted() {
         return new DirectoryInfo(CurrentPath).GetFileSystemInfos();
     }

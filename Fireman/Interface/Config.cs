@@ -31,6 +31,15 @@ public class Config : Module {
     public static Setting<Keybind> LeftTabBindAlt = null!;
     public static Setting<Keybind> RightTabBind = null!;
     public static Setting<Keybind> RightTabBindAlt = null!;
+    public static Setting<Keybind> CopyBind = null!;
+    public static Setting<Keybind> CopyBindAlt = null!;
+    public static Setting<Keybind> CutBind = null!;
+    public static Setting<Keybind> CutBindAlt = null!;
+    public static Setting<Keybind> PasteBind = null!;
+    public static Setting<Keybind> PasteBindAlt = null!;
+    public static Setting<Keybind> PermaDeleteBind = null!;
+    public static Setting<Keybind> PermaDeleteBindAlt = null!;
+
     public static Setting<bool> SortFoldersBeforeFiles = null!;
 
     /// <inheritdoc />
@@ -56,6 +65,14 @@ public class Config : Module {
         LeftTabBindAlt = CreateSetting("leftTab", "Left tab (alternative)", "Keybind to switch to the tab on the left", new Keybind(KeyCode.None), bindsGroup);
         RightTabBind = CreateSetting("rightTab", "Right tab", "Keybind to switch to the tab on the right", new Keybind(KeyCode.PageDown, KeyCode.LeftControl), bindsGroup);
         RightTabBindAlt = CreateSetting("rightTab", "Right tab (alternative)", "Keybind to switch to the tab on the right", new Keybind(KeyCode.Tab, KeyCode.LeftControl), bindsGroup);
+        CopyBind = CreateSetting("copy", "Copy", "Keybind to copy items", new Keybind(KeyCode.C, KeyCode.LeftControl), bindsGroup);
+        CopyBindAlt = CreateSetting("copyAlt", "Copy (alternative)", "Keybind to copy items", new Keybind(KeyCode.C, KeyCode.RightControl), bindsGroup);
+        CutBind = CreateSetting("cut", "Cut", "Keybind to cut items", new Keybind(KeyCode.X, KeyCode.LeftControl), bindsGroup);
+        CutBindAlt = CreateSetting("cutAlt", "Cut (alternative)", "Keybind to cut items", new Keybind(KeyCode.X, KeyCode.RightControl), bindsGroup);
+        PasteBind = CreateSetting("paste", "Paste", "Keybind to paste items", new Keybind(KeyCode.V, KeyCode.LeftControl), bindsGroup);
+        PasteBindAlt = CreateSetting("pasteAlt", "Paste (alternative)", "Keybind to paste items", new Keybind(KeyCode.V, KeyCode.RightControl), bindsGroup);
+        PermaDeleteBind = CreateSetting("permaDelete", "Delete permanently", "Keybind to permanently delete items", new Keybind(KeyCode.Delete, KeyCode.LeftShift), bindsGroup);
+        PermaDeleteBindAlt = CreateSetting("permaDeleteAlt", "Delete permanently (alternative)", "Keybind to permanently delete items", new Keybind(KeyCode.Delete, KeyCode.RightShift), bindsGroup);
 
         SortFoldersBeforeFiles = CreateSetting("sortFoldersBeforeFiles", "Sort folders before files", "Folders on top, then goes files", true);
     }

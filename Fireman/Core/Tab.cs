@@ -28,7 +28,8 @@ public class Tab {
     public string CurrentPath {
         set {
             var old = _history.CurrentPath;
-            _history.NavigateTo(value);
+            var navigated = _history.NavigateTo(value);
+            if (!navigated) return;
             UpdateSelection(_history.CurrentPath, old);
             CurrentPathChanged?.Invoke();
         }
@@ -74,17 +75,16 @@ public class Tab {
         var dir = new DirectoryInfo(newPath);
         var oldDir = new DirectoryInfo(oldPath);
 
-        // Navigating up: select previous dir
+        var names = GetSortedItems(dir.GetFileSystemInfos()).Select(i => i.FullName).ToList();
+        if (names.Count == 0) return;
+
         if (dir.FullName == (oldDir.Parent?.FullName ?? "")) {
-            var names = GetSortedItems(dir.GetFileSystemInfos()).Select(i => i.FullName).ToList();
+            // Navigating up -> select previous dir
             var index = names.IndexOf(oldDir.FullName);
             Selection.SelectOnly(oldDir.FullName, index);
-        }
-
-        // Else select first item in new dir
-        else {
-            var names = GetSortedItems(dir.GetFileSystemInfos()).Select(i => i.FullName).ToList();
-            Selection.SelectOnly(names[0], 0);
+        } else {
+            // Else -> select first item in new dir
+            if (names.Count > 0) Selection.SelectOnly(names[0], 0);
         }
     }
 }
