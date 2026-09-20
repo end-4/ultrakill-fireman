@@ -1,6 +1,6 @@
 ## File manager for ULTRAKILL
 
-Press `Alt`+`E` to toggle the file manager
+Press `LeftAlt`+`E` to toggle the file manager
 
 <img alt="image" src="https://github.com/user-attachments/assets/c95af0dd-47e6-4756-a46e-6cfd88931b6e" />
 
@@ -42,7 +42,7 @@ comp.ItemsPicked += pathArr => {
 
 ## License
 
-- Code: MIT (free to reuse)
+- Code: MIT
 - Assets: CC BY-SA 4.0
 
 In general I don't mind others reusing my creations.
