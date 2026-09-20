@@ -62,7 +62,7 @@ public class BreadcrumbPieceController : MonoBehaviour {
         else if (Directory.FullName == Paths.Home) iconName = "home_symbolic";
         else if (Directory.FullName == Paths.Downloads) iconName = "downloads_symbolic";
         else if (Directory.FullName == Paths.Documents) iconName = "documents_symbolic";
-        else if (Directory.FullName == Paths.Images) iconName = "pictures_symbolic";
+        else if (Directory.FullName == Paths.Images) iconName = "images_symbolic";
         else if (Directory.FullName == Paths.Music) iconName = "music_symbolic";
         else if (Directory.FullName == Paths.Videos) iconName = "videos_symbolic";
         else if (Directory.FullName == Paths.Thorn) iconName = "thorn_symbolic";
