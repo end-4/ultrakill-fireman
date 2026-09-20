@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using Fireman.Core;
@@ -16,8 +17,7 @@ public abstract class ViewPopulator : MonoBehaviour {
     public Window? TargetWindow;
 
     private FileSystemWatcher? _watcher;
-    private volatile bool _refreshRequested;
-    private FileSystemEventArgs? _lastFileEvent;
+    private readonly ConcurrentQueue<FileSystemEventArgs> _fileEventQueue = new();
 
     protected virtual void Start() {
         if (TargetWindow == null) return;
@@ -70,11 +70,11 @@ public abstract class ViewPopulator : MonoBehaviour {
         _watcher.Changed -= OnFileSystemChanged;
         _watcher.Dispose();
         _watcher = null;
+        _fileEventQueue.Clear();
     }
 
     private void OnFileSystemChanged(object sender, FileSystemEventArgs e) {
-        _refreshRequested = true;
-        _lastFileEvent = e;
+        _fileEventQueue.Enqueue(e);
     }
 
     /// <summary>
@@ -98,27 +98,31 @@ public abstract class ViewPopulator : MonoBehaviour {
     protected abstract GameObject CreateItem(FileSystemInfo fileInfo, int index);
 
     protected virtual void Update() {
-        if (_refreshRequested) {
-            _refreshRequested = false;
-            switch (_lastFileEvent?.ChangeType) {
+        while (_fileEventQueue.TryDequeue(out var fileEvent)) {
+            switch (fileEvent.ChangeType) {
                 case WatcherChangeTypes.Deleted:
                     var match = transform.GetComponentsInChildren<FileItemController>()
-                        .FirstOrDefault(comp => comp.FileInfo?.FullName == _lastFileEvent.FullPath);
+                        .FirstOrDefault(comp => comp.FileInfo?.FullName == fileEvent.FullPath);
                     if (match != null) Destroy(match.gameObject);
                     RefreshIndices();
                     break;
                 case WatcherChangeTypes.Created:
-                    var path = _lastFileEvent.FullPath;
+                    var path = fileEvent.FullPath;
                     FileSystemInfo fileInfo = File.Exists(path) ? new FileInfo(path) : new DirectoryInfo(path);
                     var obj = CreateItem(fileInfo, transform.childCount);
                     obj.transform.SetParent(transform, false);
                     break;
                 case WatcherChangeTypes.Renamed:
-                    if (_lastFileEvent is RenamedEventArgs renamed) {
+                    if (fileEvent is RenamedEventArgs renamed) {
                         var oldPath = renamed.OldFullPath;
+                        var newPath = renamed.FullPath;
                         var renamedMatch = transform.GetComponentsInChildren<FileItemController>()
                             .FirstOrDefault(comp => comp.FileInfo?.FullName == oldPath);
-                        if (renamedMatch != null) renamedMatch.UpdateItemInfo();
+                        if (renamedMatch != null) {
+                            FileSystemInfo renamedFileInfo = File.Exists(newPath) ? new FileInfo(newPath) : new DirectoryInfo(newPath);
+                            renamedMatch.FileInfo = renamedFileInfo;
+                            renamedMatch.UpdateItemInfo();
+                        }
                     } else {
                         Repopulate();
                     }
