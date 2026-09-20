@@ -16,15 +16,17 @@ public static class Paths {
     public static readonly DirectoryInfo ImagesInfo = new (Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
     public static readonly DirectoryInfo MusicInfo = new (Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
     public static readonly DirectoryInfo VideosInfo = new (Environment.GetFolderPath(Environment.SpecialFolder.MyVideos));
-    public static readonly DirectoryInfo ThornInfo = new (Path.Combine(BepInExInfo.FullName, "config", "ThornClient"));
+    public static readonly DirectoryInfo AngryLevelsInfo = new (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AngryLevelLoader"));
+    public static readonly DirectoryInfo ThornConfigInfo = new (Path.Combine(BepInExInfo.FullName, "config", "ThornClient"));
     public static string Game => GameInfo.FullName;
     public static string BepInEx => BepInExInfo.FullName;
     public static string Cybergrind => CybergrindInfo.FullName;
     public static string Home => HomeInfo.FullName;
     public static string Downloads => DownloadsInfo.FullName;
-    public static string Documents => DocumentsInfo .FullName;
+    public static string Documents => DocumentsInfo.FullName;
     public static string Images => ImagesInfo.FullName;
     public static string Music => MusicInfo.FullName;
     public static string Videos => VideosInfo.FullName;
-    public static string Thorn => ThornInfo.FullName;
+    public static string AngryLevels => AngryLevelsInfo.FullName;
+    public static string ThornConfig => ThornConfigInfo.FullName;
 }

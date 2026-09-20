@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BepInEx.Bootstrap;
 using Fireman.Core;
 using Fireman.Platform;
 using ThornClient.Managers;
@@ -15,10 +16,12 @@ public class BookmarksController : MonoBehaviour {
     public Window? TargetWindow;
 
     private const string Separator = "__SEPARATOR";
-    private static readonly string[] ItemPaths = [
+    private static string[] ItemPaths => [
         Paths.Game,
         Paths.BepInEx,
         Paths.Cybergrind,
+        .. (Chainloader.PluginInfos.ContainsKey("com.eternalUnion.angryLevelLoader") ? new[]{Paths.AngryLevels} : new string[]{}),
+        .. (Chainloader.PluginInfos.ContainsKey("com.github.end-4.thornClient") ? new[]{Paths.ThornConfig} : new string[]{}),
         Separator,
         Paths.Home,
         Paths.Downloads,

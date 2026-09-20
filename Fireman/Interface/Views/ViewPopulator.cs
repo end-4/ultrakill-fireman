@@ -166,6 +166,10 @@ public abstract class ViewPopulator : MonoBehaviour {
     }
 
     private void RefreshIndices() {
-        throw new NotImplementedException();
+        var childrenComps = GetComponentsInChildren<FileItemController>();
+        for (int i = 0; i < childrenComps.Length; i++) {
+            var c = childrenComps[i];
+            c.Index = i;
+        }
     }
 }

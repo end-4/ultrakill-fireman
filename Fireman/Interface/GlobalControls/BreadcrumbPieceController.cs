@@ -54,21 +54,10 @@ public class BreadcrumbPieceController : MonoBehaviour {
     private void UpdateInfo() {
         if (Directory == null || _icon == null || _text == null) return;
         _text.text = Directory.Name;
-        string iconName = "";
-        if (Directory.Parent == null) iconName = "hard_disk_symbolic";
-        else if (Directory.FullName == Paths.Game) iconName = "game_symbolic";
-        else if (Directory.FullName == Paths.BepInEx) iconName = "bepinex_symbolic";
-        else if (Directory.FullName == Paths.Cybergrind) iconName = "cybergrind_symbolic";
-        else if (Directory.FullName == Paths.Home) iconName = "home_symbolic";
-        else if (Directory.FullName == Paths.Downloads) iconName = "downloads_symbolic";
-        else if (Directory.FullName == Paths.Documents) iconName = "documents_symbolic";
-        else if (Directory.FullName == Paths.Images) iconName = "images_symbolic";
-        else if (Directory.FullName == Paths.Music) iconName = "music_symbolic";
-        else if (Directory.FullName == Paths.Videos) iconName = "videos_symbolic";
-        else if (Directory.FullName == Paths.Thorn) iconName = "thorn_symbolic";
+        var sprite = FileIcons.GetSymbolicFolderIcon(Directory);
 
-        if (iconName != "") {
-            _icon.sprite = AssetManager.Get<Sprite>(FileIcons.BundleKey, iconName);
+        if (sprite != null) {
+            _icon.sprite = sprite;
             _icon.gameObject.SetActive(true);
         } else {
             _icon.gameObject.SetActive(false);

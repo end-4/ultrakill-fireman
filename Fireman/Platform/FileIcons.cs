@@ -27,7 +27,8 @@ public static class FileIcons {
         { Paths.Images, "folder_images" },
         { Paths.Music, "folder_music" },
         { Paths.Videos, "folder_videos" },
-        { Paths.Thorn, "folder_thorn" },
+        { Paths.AngryLevels, "folder_angry" },
+        { Paths.ThornConfig, "folder_thorn" },
     };
 
     private static readonly Dictionary<string[], string> FileExtMap = new() {
@@ -61,5 +62,23 @@ public static class FileIcons {
             }
         }
         return AssetManager.Get<Sprite>(BundleKey, targetIconName);
+    }
+
+    public static Sprite? GetSymbolicFolderIcon(DirectoryInfo dirInfo) {
+        string iconName = "";
+        if (dirInfo.Parent == null) iconName = "hard_disk_symbolic";
+        else if (dirInfo.FullName == Paths.Game) iconName = "game_symbolic";
+        else if (dirInfo.FullName == Paths.BepInEx) iconName = "bepinex_symbolic";
+        else if (dirInfo.FullName == Paths.Cybergrind) iconName = "cybergrind_symbolic";
+        else if (dirInfo.FullName == Paths.Home) iconName = "home_symbolic";
+        else if (dirInfo.FullName == Paths.Downloads) iconName = "downloads_symbolic";
+        else if (dirInfo.FullName == Paths.Documents) iconName = "documents_symbolic";
+        else if (dirInfo.FullName == Paths.Images) iconName = "images_symbolic";
+        else if (dirInfo.FullName == Paths.Music) iconName = "music_symbolic";
+        else if (dirInfo.FullName == Paths.Videos) iconName = "videos_symbolic";
+        else if (dirInfo.FullName == Paths.AngryLevels) iconName = "angry_symbolic";
+        else if (dirInfo.FullName == Paths.ThornConfig) iconName = "thorn_symbolic";
+        if (iconName != "") return AssetManager.Get<Sprite>(BundleKey, iconName);
+        return null;
     }
 }

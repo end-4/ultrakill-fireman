@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Fireman.Core;
 using Fireman.Interface.Reusables;
@@ -24,6 +25,12 @@ public class BookmarkItemController : MonoBehaviour {
     /// </summary>
     public Window? TargetWindow;
 
+    private static Dictionary<string, string> NiceBookmarkNames = new() {
+        [Paths.Home] = "Home",
+        [Paths.AngryLevels] = "Angry levels",
+        [Paths.ThornConfig] = "Thorn config"
+    };
+
     private ButtonActiveStateIndicator? _btnVisualState;
 
     private void Start() {
@@ -40,12 +47,13 @@ public class BookmarkItemController : MonoBehaviour {
         UpdateDisplay();
     }
 
-    private void OnDisable() {
+    private void OnDestroy() {
         if (TargetWindow != null) TargetWindow.CurrentPathChanged -= UpdateDisplay;
     }
 
     private string GetBookmarkName(DirectoryInfo path) {
-        return path.FullName == Paths.Home ? "Home" : path.Name;
+        if (NiceBookmarkNames.TryGetValue(path.FullName, out var niceName)) return niceName;
+        return path.Name;
     }
 
     private void UpdateDisplay() {
