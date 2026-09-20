@@ -10,7 +10,7 @@ namespace Fireman.Core;
 /// </summary>
 public class Tab {
     private NavigationHistory _history;
-    private SortStrategy _sortStrategy = new ExtensionSortStrategy();
+    private SortStrategy _sortStrategy = new NameSortStrategy();
     private FileSelectionModel _selectionModel;
 
     public FileSelectionModel Selection {

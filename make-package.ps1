@@ -80,6 +80,7 @@ if (Test-Path $assetsSrc) {
 
 # 4.1) Copy main icon to plugin dir
 Copy-Item -Path (Join-Path $staging 'icon.png') -Destination (Join-Path $pluginDir 'icon.png')
+Copy-Item -Path (Join-Path $staging 'icon_clickgui.png') -Destination (Join-Path $pluginDir 'icon_clickgui.png')
 
 # 5) Create zip package
 $zipName = "$pkgName-$pkgVer.zip"

@@ -37,16 +37,17 @@ public class TabButtonController : MonoBehaviour {
         _btn?.onClick.AddListener(() => {
             if (TargetWindow != null && TargetTab != null) TargetWindow.CurrentTab = TargetTab;
         });
-        _close?.onClick.AddListener(() => {
-            if (TargetWindow != null && TargetTab != null) TargetWindow.CloseTab(TargetTab);
-        });
-        gameObject.GetOrAddComponent<ClickHandler>().OnMiddlePress += () => {
-            if (TargetWindow != null && TargetTab != null) TargetWindow.CloseTab(TargetTab);
-        };
+        _close?.onClick.AddListener(CloseTab);
+        gameObject.GetOrAddComponent<ClickHandler>().OnMiddlePress += CloseTab;
+        _close?.gameObject.GetOrAddComponent<ClickHandler>().OnMiddlePress += CloseTab;
         if (TargetTab != null) TargetTab.CurrentPathChanged += UpdateCurrentDir;
         if (TargetWindow != null) TargetWindow.CurrentTabChanged += UpdateActive;
         UpdateCurrentDir();
         UpdateActive();
+    }
+
+    private void CloseTab() {
+        if (TargetWindow != null && TargetTab != null) TargetWindow.CloseTab(TargetTab);
     }
 
     private void OnDestroy() {
@@ -59,7 +60,7 @@ public class TabButtonController : MonoBehaviour {
         var path = TargetTab.CurrentPath;
         var dirInfo = new DirectoryInfo(path);
         var baseName = dirInfo.Name;
-        var targetIcon = Icons.GetFileIcon(dirInfo);
+        var targetIcon = FileIcons.GetFileIcon(dirInfo);
         if (_name.text != baseName) _name.text = baseName;
         if (_icon.sprite != targetIcon) _icon.sprite = targetIcon;
 

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using Fireman.Core;
 using TMPro;
 using UnityEngine;
@@ -15,6 +17,7 @@ public abstract class ViewPopulator : MonoBehaviour {
 
     private FileSystemWatcher? _watcher;
     private volatile bool _refreshRequested;
+    private FileSystemEventArgs? _lastFileEvent;
 
     protected virtual void Start() {
         if (TargetWindow == null) return;
@@ -42,9 +45,9 @@ public abstract class ViewPopulator : MonoBehaviour {
         try {
             _watcher = new FileSystemWatcher(TargetWindow.CurrentPath) {
                 NotifyFilter = NotifyFilters.FileName
-                             | NotifyFilters.DirectoryName
-                             | NotifyFilters.LastWrite
-                             | NotifyFilters.Size,
+                               | NotifyFilters.DirectoryName
+                               | NotifyFilters.LastWrite
+                               | NotifyFilters.Size,
                 Filter = "*.*",
                 EnableRaisingEvents = true
             };
@@ -58,10 +61,6 @@ public abstract class ViewPopulator : MonoBehaviour {
         }
     }
 
-    private void OnFileSystemChanged(object sender, FileSystemEventArgs e) {
-        _refreshRequested = true;
-    }
-
     private void DisposeWatcher() {
         if (_watcher == null) return;
         _watcher.EnableRaisingEvents = false;
@@ -71,6 +70,11 @@ public abstract class ViewPopulator : MonoBehaviour {
         _watcher.Changed -= OnFileSystemChanged;
         _watcher.Dispose();
         _watcher = null;
+    }
+
+    private void OnFileSystemChanged(object sender, FileSystemEventArgs e) {
+        _refreshRequested = true;
+        _lastFileEvent = e;
     }
 
     /// <summary>
@@ -96,7 +100,34 @@ public abstract class ViewPopulator : MonoBehaviour {
     protected virtual void Update() {
         if (_refreshRequested) {
             _refreshRequested = false;
-            Repopulate();
+            switch (_lastFileEvent?.ChangeType) {
+                case WatcherChangeTypes.Deleted:
+                    var match = transform.GetComponentsInChildren<FileItemController>()
+                        .FirstOrDefault(comp => comp.FileInfo?.FullName == _lastFileEvent.FullPath);
+                    if (match != null) Destroy(match.gameObject);
+                    RefreshIndices();
+                    break;
+                case WatcherChangeTypes.Created:
+                    var path = _lastFileEvent.FullPath;
+                    FileSystemInfo fileInfo = File.Exists(path) ? new FileInfo(path) : new DirectoryInfo(path);
+                    var obj = CreateItem(fileInfo, transform.childCount);
+                    obj.transform.SetParent(transform, false);
+                    break;
+                case WatcherChangeTypes.Renamed:
+                    if (_lastFileEvent is RenamedEventArgs renamed) {
+                        var oldPath = renamed.OldFullPath;
+                        var renamedMatch = transform.GetComponentsInChildren<FileItemController>()
+                            .FirstOrDefault(comp => comp.FileInfo?.FullName == oldPath);
+                        if (renamedMatch != null) renamedMatch.UpdateItemInfo();
+                    } else {
+                        Repopulate();
+                    }
+
+                    break;
+                default:
+                    Repopulate();
+                    break;
+            }
         }
 
         if (TargetWindow == null) return;
@@ -115,6 +146,7 @@ public abstract class ViewPopulator : MonoBehaviour {
             if (firstItem != null) {
                 firstItem.GetComponent<Selectable>()?.Select();
             }
+
             return;
         }
 
@@ -127,5 +159,9 @@ public abstract class ViewPopulator : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             TargetWindow.CurrentTab.Selection.Clear();
         }
+    }
+
+    private void RefreshIndices() {
+        throw new NotImplementedException();
     }
 }

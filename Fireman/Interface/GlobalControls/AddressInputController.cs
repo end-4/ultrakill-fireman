@@ -12,11 +12,16 @@ namespace Fireman.Interface.GlobalControls;
 public class AddressInputController : MonoBehaviour {
     public Window? TargetWindow;
     private TMP_InputField? _input;
-    private void Start() {
+
+    private void OnEnable() {
         _input = GetComponent<TMP_InputField>();
         _input.onEndEdit.AddListener(TrySetPath);
         if (TargetWindow != null) TargetWindow.CurrentPathChanged += UpdateDisplay;
         UpdateDisplay();
+    }
+
+    private void OnDisable() {
+        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= UpdateDisplay;
     }
 
     private void TrySetPath(string value) {
@@ -25,10 +30,6 @@ public class AddressInputController : MonoBehaviour {
         } else {
             UpdateDisplay();
         }
-    }
-
-    private void OnDestroy() {
-        if (TargetWindow != null) TargetWindow.CurrentPathChanged -= UpdateDisplay;
     }
 
     private void UpdateDisplay() {

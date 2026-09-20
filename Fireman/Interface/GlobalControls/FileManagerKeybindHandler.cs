@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Fireman.Core;
+using NukeLib.UI;
 using NukeLib.Utils;
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Fireman.Interface.GlobalControls;
 
@@ -14,6 +17,12 @@ public class FileManagerKeybindHandler : MonoBehaviour {
     /// The window to control
     /// </summary>
     public Window? TargetWindow;
+
+    private AddressController? _addressController;
+
+    private void Start() {
+        _addressController = gameObject.FindRecursive("Content/TopBar/Address")?.GetComponent<AddressController>();
+    }
 
     private void OnEnable() {
         Config.NewTabBind.OnPress += NewTab;
@@ -35,6 +44,8 @@ public class FileManagerKeybindHandler : MonoBehaviour {
         Config.PasteBindAlt.OnPress += Paste;
         Config.PermaDeleteBind.OnPress += PermaDelete;
         Config.PermaDeleteBindAlt.OnPress += PermaDelete;
+        Config.FocusAddressBarBind.OnPress += FocusAddressBar;
+        Config.FocusAddressBarBindAlt.OnPress += FocusAddressBar;
     }
 
     private void OnDisable() {
@@ -57,6 +68,8 @@ public class FileManagerKeybindHandler : MonoBehaviour {
         Config.PasteBindAlt.OnPress -= Paste;
         Config.PermaDeleteBind.OnPress -= PermaDelete;
         Config.PermaDeleteBindAlt.OnPress -= PermaDelete;
+        Config.FocusAddressBarBind.OnPress -= FocusAddressBar;
+        Config.FocusAddressBarBindAlt.OnPress -= FocusAddressBar;
     }
 
     private void NewTab() {
@@ -118,5 +131,10 @@ public class FileManagerKeybindHandler : MonoBehaviour {
     private void PermaDelete() {
         if (!gameObject.activeInHierarchy || TargetWindow == null) return;
         FileOperationsManager.PermaDelete(TargetWindow.CurrentTab.Selection);
+    }
+
+    private void FocusAddressBar() {
+        if (!gameObject.activeInHierarchy || _addressController == null) return;
+        _addressController.FocusInput();
     }
 }

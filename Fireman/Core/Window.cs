@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Fireman.Core;
 using Fireman.Interface;
-using Fireman.Platform;
 
 namespace Fireman.Core;
 
@@ -23,8 +21,28 @@ public class Window {
     public event Action<Tab>? TabRemoved;
     public event Action? CurrentPathChanged;
 
+    public event Action<string[]>? ItemsPicked;
+
     public int Count => Tabs.Count;
 
+    /// <summary>
+    /// Whether multiple items can be selected at once
+    /// </summary>
+    public bool AllowMultiSelection { get; set; }
+
+    /// <summary>
+    /// Whether the window is in picker mode
+    /// </summary>
+    public bool PickerMode { get; private set; }
+
+    /// <summary>
+    /// Whether the current picking picks a folder
+    /// </summary>
+    public bool IsSelectionFolder { get; private set; }
+
+    /// <summary>
+    /// The currently focused Tab
+    /// </summary>
     public Tab CurrentTab {
         get => _tabs[_currTabIndex];
         set {
@@ -34,6 +52,9 @@ public class Window {
         }
     }
 
+    /// <summary>
+    /// The index of the currently focused Tab
+    /// </summary>
     public int CurrentTabIndex {
         get => _currTabIndex;
         set {
@@ -43,6 +64,9 @@ public class Window {
         }
     }
 
+    /// <summary>
+    /// The current path of the currently focused Tab
+    /// </summary>
     public string CurrentPath {
         get => CurrentTab.CurrentPath;
         set {
@@ -51,6 +75,9 @@ public class Window {
         }
     }
 
+    /// <summary>
+    /// The current sorting strategy of the currently focused Tab
+    /// </summary>
     public SortStrategy SortingStrategy {
         set => CurrentTab.SortingStrategy = value;
         get => CurrentTab.SortingStrategy;
@@ -119,7 +146,14 @@ public class Window {
     /// Constructor for a window
     /// </summary>
     /// <param name="initialPath">The starting path</param>
-    public Window(string initialPath) {
+    /// <param name="picker">Whether this window instance is a picker</param>
+    /// <param name="allowMultiSelection">For pickers, is multiple selection allowed</param>
+    /// <param name="isSelectionFolder"></param>
+    public Window(string initialPath, bool picker = false, bool allowMultiSelection = false,
+        bool isSelectionFolder = false) {
+        PickerMode = picker;
+        AllowMultiSelection = allowMultiSelection;
+        IsSelectionFolder = isSelectionFolder;
         var firstTab = new Tab(initialPath);
         _tabs = [firstTab];
         CurrentTabChanged += () => CurrentPathChanged?.Invoke();
@@ -128,10 +162,12 @@ public class Window {
     }
 
     /// <summary>
-    /// Clone an existing TabHost
+    /// Clone an existing Window
     /// </summary>
-    /// <param name="source">The source TabHost</param>
+    /// <param name="source">The source Window</param>
     public Window(Window source) {
+        PickerMode = source.PickerMode;
+        AllowMultiSelection = source.AllowMultiSelection;
         _tabs = source._tabs.Select(tab => new Tab(tab)).ToList();
         CurrentTabChanged += () => CurrentPathChanged?.Invoke();
         foreach (var tab in _tabs) TabAdded?.Invoke(tab);
@@ -188,7 +224,7 @@ public class Window {
     }
 
     /// <summary>
-    /// Activates current selection
+    /// Activates current selection. Use this for a click/enter key, not file picking confirmation
     /// </summary>
     public void ActivateSelection() {
         var selection = CurrentTab.Selection;
@@ -198,14 +234,55 @@ public class Window {
             var path = selection.SelectedPaths.First();
             if (Directory.Exists(path)) {
                 CurrentPath = path;
+            } else if (PickerMode && !IsSelectionFolder) {
+                PickSelection();
             }
         } else {
-            // Multi selection -> folders opened in their own tabs
-            foreach (var path in selection.SelectedPaths) {
-                if (Directory.Exists(path)) {
-                    NewTab(path);
+            bool hasFile = selection.SelectedPaths.Any(File.Exists);
+            bool hasFolder = selection.SelectedPaths.Any(Directory.Exists);
+            bool foldersOnly = hasFolder && !hasFile;
+            bool filesOnly = hasFile && !hasFolder;
+            if (foldersOnly) {
+                // Multi + folder-only -> folders opened in their own tabs
+                foreach (var path in selection.SelectedPaths) {
+                    if (Directory.Exists(path)) {
+                        NewTab(path);
+                    }
+                }
+            } else {
+                if (PickerMode && !AllowMultiSelection) return;
+                if (PickerMode) {
+                    if (filesOnly && !IsSelectionFolder) PickSelection();
                 }
             }
         }
+    }
+
+    public bool CanPickSelection() {
+        var items = CurrentTab.Selection.SelectedPaths;
+        bool hasFile = items.Any(File.Exists);
+        bool hasFolder = items.Any(Directory.Exists);
+        bool foldersOnly = hasFolder && !hasFile;
+        bool filesOnly = hasFile && !hasFolder;
+        if (!filesOnly && !foldersOnly) return false;
+        if (items.Count == 0) return false;
+        if (items.Count > 1 && !AllowMultiSelection) return false;
+        if (filesOnly && IsSelectionFolder) return false;
+        if (foldersOnly && !IsSelectionFolder) return false;
+        return true;
+    }
+
+    /// <summary>
+    /// Picks the current selection
+    /// </summary>
+    public void PickSelection() {
+        if (!CanPickSelection()) return;
+
+        var items = CurrentTab.Selection.SelectedPaths;
+        if (items.Count == 0) {
+            items = [CurrentPath];
+        }
+
+        ItemsPicked?.Invoke([.. items]);
     }
 }

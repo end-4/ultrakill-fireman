@@ -6,11 +6,14 @@ using UnityEngine;
 
 namespace Fireman.Platform;
 
-public static class Icons {
+/// <summary>
+/// Determines file icons
+/// </summary>
+public static class FileIcons {
     public const string BundleKey = "fireman.icons";
     private static readonly string BundlePath = Path.Combine(Plugin.workingDir, "assets", "fireman_fileicons.bundle");
 
-    static Icons() {
+    static FileIcons() {
         AssetManager.LoadBundle(BundleKey, BundlePath);
     }
 

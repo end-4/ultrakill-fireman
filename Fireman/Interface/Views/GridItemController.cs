@@ -43,9 +43,10 @@ public class GridItemController : FileItemController {
         }
     }
 
-    private void UpdateItemInfo() {
+    /// <inheritdoc />
+    public override void UpdateItemInfo() {
         if (FileInfo == null) return;
-        if (_icon != null) _icon.sprite = Icons.GetFileIcon(FileInfo);
+        if (_icon != null) _icon.sprite = FileIcons.GetFileIcon(FileInfo);
         if (_name != null) _name.text = TextUtils.SanitizeForDisplay(FileInfo.Name);
     }
 

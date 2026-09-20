@@ -20,7 +20,7 @@ public abstract class FileItemController : MonoBehaviour, ISelectHandler {
     public FileSystemInfo? FileInfo;
 
     /// <summary>
-    /// The tab host this item belongs to
+    /// The window this item belongs to
     /// </summary>
     public Window? TargetWindow;
 
@@ -51,7 +51,7 @@ public abstract class FileItemController : MonoBehaviour, ISelectHandler {
             TargetWindow.CurrentTab.Selection.SelectionChanged -= UpdateSelectionVisual;
         }
     }
-    public virtual void UpdateSelectionVisual() {
+    protected virtual void UpdateSelectionVisual() {
         if (ActiveIndicator == null || TargetWindow == null || FileInfo == null) return;
         ActiveIndicator.Active = TargetWindow.CurrentTab.Selection.IsSelected(FileInfo.FullName);
     }
@@ -61,9 +61,9 @@ public abstract class FileItemController : MonoBehaviour, ISelectHandler {
         var selection = TargetWindow.CurrentTab.Selection;
         bool isShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         bool isCtrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-        if (isCtrl) { // Pick/Unpick
+        if (isCtrl && TargetWindow.AllowMultiSelection) { // Pick/Unpick
             selection.Toggle(FileInfo.FullName, Index);
-        } else if (isShift) { // Range Select
+        } else if (isShift && TargetWindow.AllowMultiSelection) { // Range Select
             var allItems = TargetWindow.GetCurrentDirItems()
                 .Select(info => info.FullName)
                 .ToList();
@@ -88,7 +88,7 @@ public abstract class FileItemController : MonoBehaviour, ISelectHandler {
         if (TargetWindow == null || FileInfo == null) return;
         var selection = TargetWindow.CurrentTab.Selection;
         bool isShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        if (isShift) { // Shift arrow -> extend selection range
+        if (isShift && TargetWindow.AllowMultiSelection) { // Shift arrow -> extend selection range
             var allItems = TargetWindow.GetCurrentDirItems()
                 .Select(info => info.FullName)
                 .ToList();
@@ -122,6 +122,11 @@ public abstract class FileItemController : MonoBehaviour, ISelectHandler {
             scrollRect.content.anchoredPosition += new Vector2(0, diff);
         }
     }
+
+    /// <summary>
+    /// Updates the item's info (name, size, icon, etc.)'
+    /// </summary>
+    public abstract void UpdateItemInfo();
 }
 
 public readonly record struct PointerClickInfo(bool IsCtrl, bool IsShift) {

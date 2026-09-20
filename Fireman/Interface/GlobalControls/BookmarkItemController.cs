@@ -31,7 +31,7 @@ public class BookmarkItemController : MonoBehaviour {
         var ico = gameObject.FindRecursive("Icon")?.GetComponent<Image>();
         var text = gameObject.FindRecursive("Name")?.GetComponent<TextMeshProUGUI>();
         _btnVisualState = gameObject.GetOrAddComponent<ButtonActiveStateIndicator>();
-        var icoSprite = Icons.GetFileIcon(Path);
+        var icoSprite = FileIcons.GetFileIcon(Path);
         if (ico != null) ico.sprite = icoSprite;
         if (text != null) text.text = GetBookmarkName(Path);
 

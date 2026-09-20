@@ -15,7 +15,7 @@ namespace Fireman.Interface.GlobalControls;
 /// </summary>
 public class TabRowController : MonoBehaviour {
     /// <summary>
-    /// The TabHost this controller gets tabs from
+    /// The Window this controller gets tabs from
     /// </summary>
     public Window? TargetWindow;
 
