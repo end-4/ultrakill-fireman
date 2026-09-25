@@ -229,7 +229,9 @@ public class Window {
     public void ActivateSelection() {
         var selection = CurrentTab.Selection;
         var count = selection.Count;
-        if (count == 1) {
+        if (count == 0 && PickerMode && IsSelectionFolder) {
+            PickSelection();
+        } else if (count == 1) {
             // Single selection -> folder opened in current tab
             var path = selection.SelectedPaths.First();
             if (Directory.Exists(path)) {
@@ -237,7 +239,7 @@ public class Window {
             } else if (PickerMode && !IsSelectionFolder) {
                 PickSelection();
             }
-        } else {
+        } else if (count > 1) {
             bool hasFile = selection.SelectedPaths.Any(File.Exists);
             bool hasFolder = selection.SelectedPaths.Any(Directory.Exists);
             bool foldersOnly = hasFolder && !hasFile;

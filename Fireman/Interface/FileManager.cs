@@ -17,23 +17,52 @@ namespace Fireman.Interface;
 public class FileManager : MonoBehaviour {
     private static readonly string DefaultPath = Platform.Paths.GameInfo.FullName;
 
-    private Window WindowInstance;
-    public IReadOnlyList<Tab> Tabs => WindowInstance.Tabs;
-    public Tab CurrentTab => WindowInstance.CurrentTab;
+    /// <summary>
+    /// The starting path for the file manager
+    /// </summary>
+    public string StartingPath = DefaultPath;
 
+    /// <summary>
+    /// The file manager window data model
+    /// </summary>
+    private Window? WindowInstance;
+
+    /// <summary>
+    /// The tabs of the file manager
+    /// </summary>
+    public IReadOnlyList<Tab> Tabs => WindowInstance?.Tabs ?? [];
+
+    /// <summary>
+    /// The current tab of the file manager
+    /// </summary>
+    public Tab? CurrentTab => WindowInstance.CurrentTab;
+
+    /// <summary>
+    /// Emitted when item(s) are picked
+    /// </summary>
     public event Action<string[]>? ItemsPicked;
+
+    /// <summary>
+    /// Emitted when the file manager is closed
+    /// </summary>
+    public event Action? Closed;
 
     private bool _pickerMode = false;
     private bool _allowMultiSelection = true;
     private bool _isSelectionFolder = false;
 
-    public string CurrentPath {
-        get => WindowInstance.CurrentPath;
-        set => WindowInstance.CurrentPath = value;
+    /// <summary>
+    /// The current path of the file manager instance
+    /// </summary>
+    public string? CurrentPath {
+        get => WindowInstance?.CurrentPath;
+        set {
+            if (WindowInstance != null) WindowInstance.CurrentPath = value;
+        }
     }
 
     private void Start() {
-        WindowInstance = new Window(DefaultPath, picker: _pickerMode, allowMultiSelection: _allowMultiSelection,
+        WindowInstance = new Window(StartingPath, picker: _pickerMode, allowMultiSelection: _allowMultiSelection,
             isSelectionFolder: _isSelectionFolder);
 
         // Controller adding //
@@ -68,7 +97,7 @@ public class FileManager : MonoBehaviour {
         settings?.gameObject.SetActive(false); // TODO allow open thorn clickgui menu and impl this btn
 
         // Bookmarks
-        var bookmarks = gameObject?.FindRecursive("Content/Body/Bookmarks/Container/ScrollView/Viewport/Content");
+        var bookmarks = gameObject.FindRecursive("Content/Body/Bookmarks/Container/ScrollView/Viewport/Content");
         var bookmarksComp = bookmarks?.AddComponent<BookmarksController>();
         if (bookmarksComp != null) bookmarksComp.TargetWindow = WindowInstance;
 
@@ -102,8 +131,12 @@ public class FileManager : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        WindowInstance.ItemsPicked -= PickAndDestroy;
-        WindowInstance.TabsChanged -= CloseIfEmpty;
+        if (WindowInstance != null) {
+            WindowInstance.ItemsPicked -= PickAndDestroy;
+            WindowInstance.TabsChanged -= CloseIfEmpty;
+        }
+
+        Closed?.Invoke();
     }
 
     private void PickAndDestroy(string[] paths) {
@@ -132,7 +165,7 @@ public class FileManager : MonoBehaviour {
         comp._pickerMode = pickerMode;
         comp._allowMultiSelection = allowMultiSelection;
         comp._isSelectionFolder = isSelectionFolder;
-        if (initialPath != null) comp.CurrentPath = initialPath;
+        if (initialPath != null) comp.StartingPath = initialPath;
         return comp;
     }
 
@@ -140,7 +173,6 @@ public class FileManager : MonoBehaviour {
     /// Creates a new file manager instance (both this controller and the UI)
     /// </summary>
     /// <param name="initialPath">The initial path</param>
-    /// <param name="pickerMode">Whether to open in picker mode</param>
     /// <returns>A FileManager which is a MonoBehavior attached to the file manager GameObject</returns>
     public static FileManager CreateManager(string? initialPath = null) {
         return NewInstance(initialPath, pickerMode: false, allowMultiSelection: true);

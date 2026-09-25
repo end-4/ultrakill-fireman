@@ -20,7 +20,7 @@ public class Plugin : BaseUnityPlugin {
     public static string workingDir = Path.GetDirectoryName(workingPath);
     public const string PluginGUID = "com.github.end-4.fireman";
     public const string PluginName = "Fireman";
-    public const string PluginVersion = "0.1.0";
+    public const string PluginVersion = "0.1.1";
     public static string PluginIconPath => Path.Combine(workingDir, "icon.png");
 
     // Assets

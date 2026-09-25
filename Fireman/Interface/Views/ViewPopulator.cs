@@ -100,12 +100,12 @@ public abstract class ViewPopulator : MonoBehaviour {
     protected virtual void Update() {
         while (_fileEventQueue.TryDequeue(out var fileEvent)) {
             switch (fileEvent.ChangeType) {
-                case WatcherChangeTypes.Deleted:
-                    var match = transform.GetComponentsInChildren<FileItemController>()
-                        .FirstOrDefault(comp => comp.FileInfo?.FullName == fileEvent.FullPath);
-                    if (match != null) Destroy(match.gameObject);
-                    RefreshIndices();
-                    break;
+                // case WatcherChangeTypes.Deleted:
+                //     var match = transform.GetComponentsInChildren<FileItemController>()
+                //         .FirstOrDefault(comp => comp.FileInfo?.FullName == fileEvent.FullPath);
+                //     if (match != null) Destroy(match.gameObject);
+                //     RefreshIndices();
+                //     break;
                 case WatcherChangeTypes.Created:
                     var path = fileEvent.FullPath;
                     FileSystemInfo fileInfo = File.Exists(path) ? new FileInfo(path) : new DirectoryInfo(path);

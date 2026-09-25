@@ -161,12 +161,16 @@ public class Config : Module {
     }
 
     private void SendStartupNotifications() {
-        if (LastVersion.Value == "0.0.0" && Plugin.PluginVersion == "0.1.0") {
-            NotificationSystem.NotifySend("Fireman::<color=#e09330>Hello</color>",
-                $"Press {ToggleFileManager.Value.ToString(pretty: true)} to toggle the file manager",
-                iconFilePath: Plugin.PluginIconPath);
-        }
+        try {
+            if (LastVersion.Value == "0.0.0" && Plugin.PluginVersion == "0.1.0") {
+                NotificationSystem.NotifySend("Fireman::<color=#e09330>Hello</color>",
+                    $"Press {ToggleFileManager.Value.ToString(pretty: true)} to toggle the file manager",
+                    iconFilePath: Plugin.PluginIconPath);
+            }
 
-        LastVersion.Value = Plugin.PluginVersion;
+            LastVersion.Value = Plugin.PluginVersion;
+        } catch {
+            // Ignore
+        }
     }
 }
