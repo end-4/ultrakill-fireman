@@ -54,14 +54,12 @@ public class GridItemController : FileItemController {
                 var rect = _icon.rectTransform.rect;
                 _icon.sprite = FileIcons.GetFileIcon(FileInfo);
 
-                var thumb = await ThumbnailManager.GetThumbnailAsync(
+                var thumb = await ThumbnailManager.GetSpriteThumbnailAsync(
                     FileInfo.FullName,
                     (int)Math.Ceiling(rect.width),
                     (int)Math.Ceiling(rect.height));
 
-                if (thumb != null) {
-                    _icon.sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
-                }
+                if (thumb != null) _icon.sprite = thumb;
             }
         } catch (Exception e) {
             Plugin.Log.LogInfo($"Error in updating item info: {e}");

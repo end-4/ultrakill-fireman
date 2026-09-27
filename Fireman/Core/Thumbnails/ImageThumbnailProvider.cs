@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Fireman.Core.Utils;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Fireman.Core.Thumbnails;
 
@@ -25,16 +27,64 @@ public class ImageThumbnailProvider : IThumbnailProvider {
         Texture2D texture = null;
         byte[] fileData = await Task.Run(() => File.ReadAllBytes(filePath));
 
-        // Load tex on Unity's main thread
+        // Load and resize texture on Unity's main thread
         await UnityMainThreadDispatcher.RunOnMainThread(() => {
-            texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
-            // ImageConversion.LoadImage must run on the Main Thread
-            if (!texture.LoadImage(fileData)) {
-                Object.Destroy(texture);
-                texture = null;
+            // Load original image
+            var fullSizeTex = new Texture2D(2, 2);
+            if (!fullSizeTex.LoadImage(fileData)) {
+                Object.Destroy(fullSizeTex);
+                return;
             }
+
+            var (targetWidth, targetHeight) =
+                CalculateAspectFitDimensions(fullSizeTex.width, fullSizeTex.height, width, height);
+
+            // If smaller than max size -> just return
+            if (fullSizeTex.width <= targetWidth && fullSizeTex.height <= targetHeight) {
+                texture = fullSizeTex;
+                return;
+            }
+
+            // Else downscale to target size
+            var rt = RenderTexture.GetTemporary(targetWidth, targetHeight, 0);
+            RenderTexture.active = rt;
+
+            Graphics.Blit(fullSizeTex, rt);
+
+            texture = new Texture2D(targetWidth, targetHeight);
+            texture.ReadPixels(new Rect(0, 0, targetWidth, targetHeight), 0, 0);
+            texture.Apply();
+
+            // Cleanup
+            RenderTexture.active = null;
+            RenderTexture.ReleaseTemporary(rt);
+            Object.Destroy(fullSizeTex);
         });
 
         return texture;
+    }
+
+    /// <summary>
+    /// Calculates the dimensions of a texture to fit within a given width and height while preserving aspect ratio.
+    /// </summary>
+    /// <param name="width">Original width</param>
+    /// <param name="height">Original height</param>
+    /// <param name="maxWidth">Max allowed width</param>
+    /// <param name="maxHeight">Max allowed height</param>
+    /// <returns>The target width and height of the image</returns>
+    private static (int targetWidth, int targetHeight) CalculateAspectFitDimensions(
+        int width, int height, int maxWidth, int maxHeight
+    ) {
+        float aspect = (float)width / height;
+
+        int targetWidth = maxWidth;
+        int targetHeight = Mathf.RoundToInt(maxWidth / aspect);
+
+        if (targetHeight > maxHeight) {
+            targetHeight = maxHeight;
+            targetWidth = Mathf.RoundToInt(maxHeight * aspect);
+        }
+
+        return (Math.Max(1, targetWidth), Math.Max(1, targetHeight));
     }
 }
