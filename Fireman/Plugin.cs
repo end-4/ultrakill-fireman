@@ -2,7 +2,7 @@ using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
-using Fireman.Core;
+using Fireman.Core.Utils;
 using ThornClient.Managers;
 
 namespace Fireman;
@@ -30,5 +30,6 @@ public class Plugin : BaseUnityPlugin {
     private void Awake() {
         Log = Logger;
         AssetManager.LoadBundle(BundleKey, BundlePath);
+        UnityMainThreadDispatcher.Initialize();
     }
 }

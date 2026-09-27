@@ -1,8 +1,11 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace Fireman.Core;
+namespace Fireman.Core.Utils;
 
+/// <summary>
+/// Text utilities
+/// </summary>
 public static class TextUtils {
     private const char ReplacementChar = '\uFFFD';
 

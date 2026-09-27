@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using Fireman.Core;
+using Fireman.Core.Thumbnails;
+using Fireman.Core.Utils;
 using Fireman.Platform;
 using NukeLib.UI;
 using TMPro;
@@ -44,10 +46,26 @@ public class GridItemController : FileItemController {
     }
 
     /// <inheritdoc />
-    public override void UpdateItemInfo() {
-        if (FileInfo == null) return;
-        if (_icon != null) _icon.sprite = FileIcons.GetFileIcon(FileInfo);
-        if (_name != null) _name.text = TextUtils.SanitizeForDisplay(FileInfo.Name);
+    public override async void UpdateItemInfo() {
+        try {
+            if (FileInfo == null) return;
+            if (_name != null) _name.text = TextUtils.SanitizeForDisplay(FileInfo.Name);
+            if (_icon != null) {
+                var rect = _icon.rectTransform.rect;
+                _icon.sprite = FileIcons.GetFileIcon(FileInfo);
+
+                var thumb = await ThumbnailManager.GetThumbnailAsync(
+                    FileInfo.FullName,
+                    (int)Math.Ceiling(rect.width),
+                    (int)Math.Ceiling(rect.height));
+
+                if (thumb != null) {
+                    _icon.sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), Vector2.zero);
+                }
+            }
+        } catch (Exception e) {
+            Plugin.Log.LogInfo($"Error in updating item info: {e}");
+        }
     }
 
     private void UpdateOpacity() {
