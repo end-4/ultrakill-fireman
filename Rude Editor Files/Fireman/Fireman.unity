@@ -1306,10 +1306,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GridFileItem
       objectReference: {fileID: 0}
-    - target: {fileID: 1752254906375505932, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
-      propertyPath: m_Padding.m_Top
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 2255608432295584697, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1334,22 +1330,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -24
       objectReference: {fileID: 0}
-    - target: {fileID: 4127402136889065296, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
-      propertyPath: m_MinWidth
-      value: 72
-      objectReference: {fileID: 0}
-    - target: {fileID: 4127402136889065296, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
-      propertyPath: m_MinHeight
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 4127402136889065296, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
-      propertyPath: m_PreferredWidth
-      value: 72
-      objectReference: {fileID: 0}
-    - target: {fileID: 4127402136889065296, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
-      propertyPath: m_PreferredHeight
-      value: 40
-      objectReference: {fileID: 0}
     - target: {fileID: 4160870888785111379, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1373,6 +1353,10 @@ PrefabInstance:
     - target: {fileID: 4160870888785111379, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -66
+      objectReference: {fileID: 0}
+    - target: {fileID: 5086467556383243451, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
+      propertyPath: m_text
+      value: file
       objectReference: {fileID: 0}
     - target: {fileID: 9083693124201486426, guid: a948786a318ae534c8f7164fe0d46397, type: 3}
       propertyPath: m_Pivot.x
