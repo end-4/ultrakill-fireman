@@ -26,7 +26,10 @@ public static class ThumbnailManager {
     }
 
     static ThumbnailManager() {
+        RegisterProvider(new CybergrindPatternThumbnailProvider());
         RegisterProvider(new ImageThumbnailProvider());
+        RegisterProvider(new OsuBeatmapThumbnailProvider());
+        RegisterProvider(new ZipWithIconThumbnailProvider());
     }
 
     /// <summary>
@@ -44,7 +47,7 @@ public static class ThumbnailManager {
     public static async Task<Texture2D?> GetThumbnailAsync(string filePath, int width = 128, int height = 128) {
         if (string.IsNullOrEmpty(filePath)) return null;
 
-    int targetSize = GetNormalizedThumbnailSize(Math.Max(width, height));
+        int targetSize = GetNormalizedThumbnailSize(Math.Max(width, height));
         string cacheKey = $"{filePath}@{targetSize}";
 
         // Cache hit -> return it

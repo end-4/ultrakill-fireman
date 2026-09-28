@@ -17,6 +17,7 @@ namespace Fireman.Interface.Views;
 /// </summary>
 public class GridItemController : FileItemController {
     private Image? _icon;
+    private Image? _secondaryIcon;
     private TextMeshProUGUI? _name;
     private Button? _btn;
     private CanvasGroup? _group;
@@ -25,6 +26,7 @@ public class GridItemController : FileItemController {
         base.Start();
         _btn = GetComponent<Button>();
         _icon = gameObject.FindRecursive("Icon")?.GetComponent<Image>();
+        _secondaryIcon = gameObject.FindRecursive("Icon/SecondaryIcon")?.GetComponent<Image>();
         _name = gameObject.FindRecursive("Name")?.GetComponent<TextMeshProUGUI>();
         _group = gameObject.GetComponent<CanvasGroup>();
         FileOperationsManager.CopyBufferChanged += UpdateOpacity;
@@ -45,21 +47,36 @@ public class GridItemController : FileItemController {
         }
     }
 
+    // We don't show secondary icons for images
+    // We do show secondary icons for non-images that have a thumbnail to distinguish them from images
+    private static readonly string[] SecondaryIconExtBlacklist = [
+        // Images
+        ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp", ".tiff", ".tif", ".ico",
+        ".heic", ".psd", ".jxl"
+    ];
+
     /// <inheritdoc />
     public override async void UpdateItemInfo() {
         try {
             if (FileInfo == null) return;
             if (_name != null) _name.text = TextUtils.SanitizeForDisplay(FileInfo.Name);
-            if (_icon != null) {
+            if (_icon != null && _secondaryIcon != null) {
                 var rect = _icon.rectTransform.rect;
-                _icon.sprite = FileIcons.GetFileIcon(FileInfo);
+                var fileTypeIcon = FileIcons.GetFileIcon(FileInfo);
+                _icon.sprite = fileTypeIcon;
 
                 var thumb = await ThumbnailManager.GetSpriteThumbnailAsync(
                     FileInfo.FullName,
                     (int)Math.Ceiling(rect.width),
                     (int)Math.Ceiling(rect.height));
 
-                if (thumb != null) _icon.sprite = thumb;
+                if (thumb != null) {
+                    _icon.sprite = thumb;
+                    _secondaryIcon.sprite = fileTypeIcon;
+                }
+
+                _secondaryIcon.gameObject.SetActive(
+                    thumb != null && !SecondaryIconExtBlacklist.Any(ext => FileInfo.Name.EndsWith(ext)));
             }
         } catch (Exception e) {
             Plugin.Log.LogInfo($"Error in updating item info: {e}");
