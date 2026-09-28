@@ -28,7 +28,8 @@ public class BookmarkItemController : MonoBehaviour {
     private static Dictionary<string, string> NiceBookmarkNames = new() {
         [Paths.Home] = "Home",
         [Paths.AngryLevels] = "Angry levels",
-        [Paths.ThornConfig] = "Thorn config"
+        [Paths.ThornConfig] = "Thorn config",
+        [Paths.Ultraskins] = "ULTRASKINS",
     };
 
     private ButtonActiveStateIndicator? _btnVisualState;

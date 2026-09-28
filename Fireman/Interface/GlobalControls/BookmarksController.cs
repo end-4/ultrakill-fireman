@@ -21,6 +21,7 @@ public class BookmarksController : MonoBehaviour {
         Paths.BepInEx,
         Paths.Cybergrind,
         .. (Chainloader.PluginInfos.ContainsKey("com.eternalUnion.angryLevelLoader") ? new[]{Paths.AngryLevels} : new string[]{}),
+        .. (Chainloader.PluginInfos.ContainsKey("ultrakill.UltraSkins.bobthecorn") ? new[]{Paths.Ultraskins} : new string[]{}),
         .. (Chainloader.PluginInfos.ContainsKey("com.github.end-4.thornClient") ? new[]{Paths.ThornConfig} : new string[]{}),
         Separator,
         Paths.Home,

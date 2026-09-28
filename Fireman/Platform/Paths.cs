@@ -18,6 +18,7 @@ public static class Paths {
     public static readonly DirectoryInfo VideosInfo = new (Environment.GetFolderPath(Environment.SpecialFolder.MyVideos));
     public static readonly DirectoryInfo AngryLevelsInfo = new (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AngryLevelLoader"));
     public static readonly DirectoryInfo ThornConfigInfo = new (Path.Combine(BepInExInfo.FullName, "config", "ThornClient"));
+    public static readonly DirectoryInfo UltraskinsInfo = new (Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "bobthecorn2000", "ULTRAKILL", "ultraskinsGC-V2", "GlobalSkins"));
     public static string Game => GameInfo.FullName;
     public static string BepInEx => BepInExInfo.FullName;
     public static string Cybergrind => CybergrindInfo.FullName;
@@ -29,4 +30,5 @@ public static class Paths {
     public static string Videos => VideosInfo.FullName;
     public static string AngryLevels => AngryLevelsInfo.FullName;
     public static string ThornConfig => ThornConfigInfo.FullName;
+    public static string Ultraskins => UltraskinsInfo.FullName;
 }
