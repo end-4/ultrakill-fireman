@@ -18,7 +18,7 @@ Set-StrictMode -Version Latest
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $tmpPackageBuildDir = 'package_build'
-$pluginDir = Join-Path "$tmpPackageBuildDir" "plugins"
+$pluginDir = Join-Path "$tmpPackageBuildDir" "plugins/Fireman"
 $assemblyName = "Fireman.dll"
 $docName = "Fireman.xml"
 Write-Host "Repository root: $root"
@@ -68,7 +68,7 @@ if (Test-Path $manifestPath) {
 
 # 4) Create BepInEx/plugins/assets and copy assets
 $assetsSrc = Join-Path $root 'assets'
-$assetsDest = Join-Path $staging 'plugins/assets'
+$assetsDest = Join-Path $staging 'plugins/Fireman/assets'
 Write-Host "Creating assets destination: $assetsDest"
 New-Item -ItemType Directory -Path $assetsDest -Force | Out-Null
 if (Test-Path $assetsSrc) {
