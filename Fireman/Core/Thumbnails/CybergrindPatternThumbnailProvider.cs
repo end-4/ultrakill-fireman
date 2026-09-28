@@ -101,7 +101,7 @@ public class CybergrindPatternThumbnailProvider : IThumbnailProvider {
 
         // We will normalize heights and use greyscale values in a fixed range
         // This will look wrong compared to vanilla but it's more readable
-        float range = maxHeight - minHeight;
+    float range = maxHeight - minHeight;
 
         for (int y = 0; y < PatternHeight; y++) {
             for (int x = 0; x < PatternWidth; x++) {

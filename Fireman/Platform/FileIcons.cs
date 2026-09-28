@@ -45,6 +45,17 @@ public static class FileIcons {
         { [".cgp"], "file_cgp" },
         { [".cgvsb"], "file_skybox" },
         { [".angry"], "file_angry" },
+        { [".osz", ".osu", ".osk", ".osr", ".osb"], "file_osu" },
+        { [".js"], "file_code_js" },
+        { [".ts"], "file_code_ts" },
+        { [".html"], "file_code_html" },
+        { [".css"], "file_code_css" },
+        { [".lua"], "file_code_lua" },
+        { [".c"], "file_code_c" },
+        { [".cpp"], "file_code_cpp" },
+        { [".rs"], "file_code_rs" },
+        { [".py", ".ipynb"], "file_code_py" },
+        { [".tsx", ".jsx", ".java", ".php", ".kt", ".swift", ".go", ".glsl", ".hlsl", ".zig"], "file_code" },
     };
 
     public static Sprite? GetFileIcon(FileSystemInfo fileInfo) {
