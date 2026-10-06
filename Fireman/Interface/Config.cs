@@ -5,6 +5,7 @@ using NukeLib.Utils;
 using ThornClient.Core;
 using ThornClient.Core.ConfigurableElements;
 using ThornClient.Core.DataTypes;
+using ThornClient.Managers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -51,15 +52,14 @@ public class Config : Module {
     public static Setting<string> LastVersion = null!;
 
     /// <inheritdoc />
-    public override Sprite Icon =>
-        FileAssetUtils.LoadNewSprite(Path.Combine(Plugin.workingDir, "icon_clickgui.png"));
+    public override Sprite Icon => AssetManager.Get<Sprite>(Plugin.BundleKey, "folder_clear");
 
     /// <inheritdoc />
     public Config() : base(
-        "fireman.config", "Fireman", "File manager for ULTRAKILL",
+        "fireman.config", "File manager", "Fireman configuration",
         ModuleCategory.Misc, hasToggling: false) {
         ToggleFileManager = CreateSetting("toggleManager", "Toggle file manager",
-            "Keybind to toggle the file manager overlay", new Keybind(KeyCode.E, KeyCode.LeftAlt));
+            "Keybind to toggle the file manager overlay", new Keybind(KeyCode.J, KeyCode.LeftAlt));
         ToggleFileManager.OnPress += ToggleOverlay;
         var bindsGroup = CreateGroup("moreBinds", "More keybinds", "Other keybinds");
         NewTabBind = CreateSetting("newTab", "New tab", "Keybind to open a new tab",
