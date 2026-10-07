@@ -2,6 +2,7 @@
 
 - Changed default keybind to Alt+J to prevent accidental presses
 - Changed the dependency to Thorn Core instead of Thorn
+- Made unavailable characters on certain file names not fuck up the entire file grid (thank you Flazhik)
 
 # 0.1.1
 

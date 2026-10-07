@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.Logging;
 using Fireman.Core.Utils;
 using ThornClient.Managers;
+using TMPro;
 
 namespace Fireman;
 
@@ -29,6 +30,10 @@ public class Plugin : BaseUnityPlugin {
 
     private void Awake() {
         Log = Logger;
+
+        // Missing text character fix Flazhik senpai told me
+        TMP_Settings.missingGlyphCharacter = '?';
+
         AssetManager.LoadBundle(BundleKey, BundlePath);
         UnityMainThreadDispatcher.Initialize();
     }
