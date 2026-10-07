@@ -10,6 +10,11 @@ Supported actions:
 
 Keybinds can be customized in the Thorn menu (`RightShift`)
 
+## Note for Gale
+
+It'll hang when trying to resolve circular dependencies.
+If you wish to uninstall Fireman or Thorn Core, disable before pressing uninstall
+
 ## Issues & Feedback
 
 Fireman is a simple file manager that integrates with
