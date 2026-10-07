@@ -71,11 +71,10 @@ $r2Dlls = @(
     "BepInEx\plugins\Notiffy\Notiffy.xml"
     "BepInEx\plugins\end_4-Notiffy\Notiffy\Notiffy.dll"
     "BepInEx\plugins\end_4-Notiffy\Notiffy\Notiffy.xml"
-    "BepInEx\plugins\Thorn\ThornClient.dll"
-    "BepInEx\plugins\Thorn\ThornClient.xml"
-    "BepInEx\plugins\end_4-Thorn\ThornClient.dll"
-    "BepInEx\plugins\end_4-Thorn\ThornClient.xml"
-
+    "BepInEx\plugins\Thorn_Core\Thorn_Core\ThornClient.dll"
+    "BepInEx\plugins\Thorn_Core\Thorn_Core\ThornClient.xml"
+    "BepInEx\plugins\end_4-Thorn_Core\Thorn_Core\ThornClient.dll"
+    "BepInEx\plugins\end_4-Thorn_Core\Thorn_Core\ThornClient.xml"
 )
 
 foreach ($dll in $r2Dlls) {

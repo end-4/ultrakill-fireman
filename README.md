@@ -1,6 +1,6 @@
 ## File manager for ULTRAKILL
 
-Press `LeftAlt`+`E` to toggle the file manager
+Press `LeftAlt`+`J` to toggle the file manager
 
 <img alt="image" src="https://github.com/user-attachments/assets/c95af0dd-47e6-4756-a46e-6cfd88931b6e" />
 
